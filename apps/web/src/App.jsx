@@ -7,6 +7,10 @@ import Roles from './components/Roles'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
 import Login from './pages/Login'
+import ContactAdmin from './pages/ContactAdmin'
+
+
+
 
 function Home() {
   return (
@@ -41,6 +45,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/contact-admin" element={<ContactAdmin />} />
       </Routes>
     </BrowserRouter>
   )

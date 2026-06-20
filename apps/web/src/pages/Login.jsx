@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 
 export default function Login() {
+  const navigate = useNavigate()
   const [role, setRole] = useState('player')
   const [showPassword, setShowPassword] = useState(false)
 
@@ -38,7 +40,8 @@ export default function Login() {
       {/* Right side */}
       <div className="bg-[#0a1628] flex items-center justify-center p-10 relative overflow-hidden">
         {/* Dot pattern */}
-        <div className="absolute inset-0 opacity-[0.06]"
+        <div
+          className="absolute inset-0 opacity-[0.06]"
           style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
         />
 
@@ -103,10 +106,15 @@ export default function Login() {
             SIGN IN
           </Button>
 
-          {/* Register link */}
+          {/* Contact admin link */}
           <p className="text-center text-white/40 text-sm mt-6">
             Don't have an account?{' '}
-            <a href="#" className="text-green-400 font-medium hover:underline">Register here</a>
+            <span
+              onClick={() => navigate('/contact-admin')}
+              className="text-green-400 font-medium hover:underline cursor-pointer"
+            >
+              Contact admin
+            </span>
           </p>
         </div>
       </div>
