@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { User, AudioWaveform, ClipboardList, Trophy, Eye, EyeOff, ArrowLeft } from 'lucide-react'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -8,9 +9,9 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
 
   const roles = [
-    { id: 'player', label: 'Player', icon: '🏃‍♀️' },
-    { id: 'coach', label: 'Coach', icon: '🎽' },
-    { id: 'selector', label: 'Selector', icon: '📋' },
+    { id: 'player', label: 'Player', icon: <User size={22} /> },
+    { id: 'coach', label: 'Coach', icon: <AudioWaveform size={22} /> },
+    { id: 'selector', label: 'Selector', icon: <ClipboardList size={22} /> },
   ]
 
   return (
@@ -25,7 +26,9 @@ export default function Login() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628]/50 to-[#0a1628]/85" />
         <div className="relative z-10 p-10 h-full flex flex-col justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#1a6b3c] rounded-lg flex items-center justify-center text-white text-lg">🏆</div>
+            <div className="w-9 h-9 bg-[#1a6b3c] rounded-lg flex items-center justify-center text-white">
+              <Trophy size={18} />
+            </div>
             <span className="text-white font-medium text-sm">WPCA Women's Cricket</span>
           </div>
           <div>
@@ -39,13 +42,22 @@ export default function Login() {
 
       {/* Right side */}
       <div className="bg-[#0a1628] flex items-center justify-center p-10 relative overflow-hidden">
-        {/* Dot pattern */}
         <div
           className="absolute inset-0 opacity-[0.06]"
           style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
         />
 
         <div className="relative z-10 w-full max-w-sm">
+
+          {/* Back to home */}
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors text-sm mb-8"
+          >
+            <ArrowLeft size={16} />
+            Back to home
+          </button>
+
           <h2 className="text-3xl font-bold text-white mb-1">Sign in</h2>
           <p className="text-white/40 text-sm mb-8">Choose your role and enter your credentials</p>
 
@@ -62,7 +74,9 @@ export default function Login() {
                     : 'border-white/15 hover:border-green-400/50'
                 }`}
               >
-                <div className="text-xl mb-1">{r.icon}</div>
+                <div className={`flex justify-center mb-1 ${role === r.id ? 'text-green-400' : 'text-white/50'}`}>
+                  {r.icon}
+                </div>
                 <div className={`text-xs ${role === r.id ? 'text-green-400' : 'text-white/50'}`}>{r.label}</div>
               </button>
             ))}
@@ -89,9 +103,9 @@ export default function Login() {
               />
               <button
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors text-sm"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
               >
-                {showPassword ? '🙈' : '👁️'}
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
@@ -116,6 +130,7 @@ export default function Login() {
               Contact admin
             </span>
           </p>
+
         </div>
       </div>
     </div>
