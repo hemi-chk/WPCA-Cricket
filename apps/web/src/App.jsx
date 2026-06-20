@@ -8,6 +8,10 @@ import CTA from './components/CTA'
 import Footer from './components/Footer'
 import Login from './pages/Login'
 import ContactAdmin from './pages/ContactAdmin'
+import ForgotPassword from './pages/ForgotPassword'
+
+
+
 
 
 
@@ -46,6 +50,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact-admin" element={<ContactAdmin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   )

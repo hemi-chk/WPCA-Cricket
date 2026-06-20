@@ -111,9 +111,9 @@ export default function Login() {
           </div>
 
           {/* Forgot */}
-          <div className="text-right mb-6">
-            <a href="#" className="text-green-400 text-xs hover:underline">Forgot password?</a>
-          </div>
+         <a onClick={() => navigate('/forgot-password')} className="text-green-400 text-xs hover:underline cursor-pointer">
+  Forgot password?
+</a>
 
           {/* Submit */}
           <Button className="w-full bg-[#1a6b3c] hover:bg-[#145c32] text-white py-6 text-sm font-bold tracking-widest">
