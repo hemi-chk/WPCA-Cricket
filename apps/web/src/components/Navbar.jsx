@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 
 export default function Navbar() {
+  const navigate = useNavigate()
+
   return (
     <nav className="flex items-center justify-between px-10 py-4 bg-[#0a1628]/80 backdrop-blur-md sticky top-0 z-50">
       <div className="flex items-center gap-3">
@@ -12,7 +15,11 @@ export default function Navbar() {
           <a key={link} href="#" className="text-white/70 text-sm hover:text-white transition-colors">{link}</a>
         ))}
       </div>
-      <Button variant="outline" className="text-white border-white/30 bg-transparent hover:bg-white/10 text-sm">
+      <Button
+        variant="outline"
+        onClick={() => navigate('/login')}
+        className="text-white border-white/30 bg-transparent hover:bg-white/10 text-sm"
+      >
         Sign in
       </Button>
     </nav>
