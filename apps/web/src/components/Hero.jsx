@@ -19,7 +19,7 @@ export default function Hero() {
           Empowering<br />Every <span className="text-green-400">Woman.</span><br />Every Match.
         </h1>
         <p className="text-white/60 text-sm leading-relaxed mb-8 max-w-md">
-          The official management platform for Western Province Women's Cricket Association. Track performance, manage teams, and grow the women's game.
+          The official management platform for Western Province Women's Cricket Association. We  Track performance, manage teams, and grow the women's game.
         </p>
         <div className="flex gap-3 mb-10">
           <Button className="bg-[#1a6b3c] hover:bg-[#145c32] text-white px-7">Get started</Button>
