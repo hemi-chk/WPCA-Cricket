@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   Home, Activity, CalendarDays, Newspaper, Star,
   Settings, LogOut, ChevronRight, ChevronLeft, Trophy, Search,
+  Ruler, Scale, Shirt, Flag, Users, Target, Clock,
 } from 'lucide-react'
 
 const navLinks = [
@@ -20,15 +21,18 @@ const ageCategories = [
   { label: 'Senior', count: 45 },
 ]
 
-const playerInfoRows = [
-  { label: 'Height', value: '165 cm' },
-  { label: 'Weight', value: '58 kg' },
-  { label: 'Role', value: 'All-rounder' },
-  { label: 'Batting', value: 'Right hand' },
-  { label: 'Age Group', value: 'Under 19' },
-  { label: 'Bowling', value: 'RA Medium' },
-  { label: 'Joined', value: 'Jan 15, 2024' },
-  { label: 'Reg. ends', value: 'Dec 31, 2026' },
+const playerInfoLeft = [
+  { icon: Ruler,    label: 'Height',        value: '165 cm' },
+  { icon: Scale,    label: 'Weight',        value: '58 kg' },
+  { icon: Shirt,    label: 'Shirt',         value: '#7' },
+  { icon: Activity, label: 'Preferred bat', value: 'Right hand' },
+]
+
+const playerInfoRight = [
+  { icon: Flag,         label: 'Country',   value: '🇱🇰 Sri Lanka' },
+  { icon: Users,        label: 'Age Group', value: 'Under 19' },
+  { icon: CalendarDays, label: 'Reg. ends', value: 'Dec 31, 2026' },
+  { icon: Clock,        label: 'Joined',    value: 'Jan 15, 2024' },
 ]
 
 const perfData = [
@@ -295,74 +299,104 @@ export default function PlayerDashboard() {
         </header>
 
         {/* Player card */}
-        <div className="bg-[#0a1420] border-b border-white/8 flex items-stretch gap-0 shrink-0 min-h-48">
-          {/* Large player image placeholder */}
-          <div className="relative w-44 shrink-0 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1a6b3c]/40 via-[#0a1420] to-[#060e18]" />
-            <div
-              className="absolute inset-0 opacity-[0.04]"
-              style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '18px 18px' }}
-            />
-            <div className="relative z-10 h-full flex flex-col items-center justify-center gap-3">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/40 to-[#1a6b3c]/20 border-2 border-white/10 flex items-center justify-center text-3xl font-bold text-white/25">
-                AP
-              </div>
-              <p className="text-white/20 text-[10px] tracking-widest">PLAYER PHOTO</p>
-            </div>
-            {/* Bottom fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0a1420] to-transparent" />
-            {/* Right fade into content */}
-            <div className="absolute top-0 right-0 bottom-0 w-10 bg-gradient-to-l from-[#0a1420] to-transparent" />
-          </div>
+        <div className="bg-[#0a1420] border-b border-white/8 shrink-0">
+          <div className="flex min-h-56">
 
-          {/* Info */}
-          <div className="flex-1 min-w-0 px-6 py-5">
-            <div className="flex items-start justify-between mb-2.5">
-              <div>
-                <h1 className="text-white text-xl font-bold leading-tight">Anjali Perera</h1>
-                <div className="flex items-center gap-2 mt-1 flex-wrap">
-                  <span className="flex items-center gap-1 text-white/45 text-xs">
-                    <Trophy size={10} className="text-green-400" /> Western Province WCA
-                  </span>
-                  <span className="text-white/20 text-xs">•</span>
-                  <span className="text-white/45 text-xs">🇱🇰 Sri Lankan</span>
-                  <span className="text-white/20 text-xs">•</span>
-                  <span className="text-white/45 text-xs">All-rounder</span>
-                  <span className="text-white/20 text-xs">•</span>
-                  <span className="text-white/45 text-xs">#7</span>
+            {/* Left — image placeholder (50%) */}
+            <div className="relative w-1/2 shrink-0 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1a6b3c]/35 via-[#0b1a10] to-[#060e18]" />
+              <div
+                className="absolute inset-0 opacity-[0.035]"
+                style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+              />
+              <div className="relative z-10 h-full flex flex-col items-center justify-center gap-3">
+                <div className="w-24 h-24 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center text-4xl font-bold text-white/20">
+                  AP
+                </div>
+                <p className="text-white/15 text-[9px] tracking-[0.2em]">PLAYER PHOTO</p>
+              </div>
+              <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#0a1420] to-transparent" />
+              <div className="absolute bottom-0 inset-x-0 h-10 bg-gradient-to-t from-[#0a1420] to-transparent" />
+            </div>
+
+            {/* Right — info (50%) */}
+            <div className="w-1/2 px-7 py-5 flex flex-col">
+              {/* Name + button */}
+              <div className="flex items-start justify-between mb-1">
+                <h1 className="text-white text-2xl font-bold leading-tight">Anjali Perera</h1>
+                <button className="bg-[#1a6b3c] hover:bg-[#145c32] text-white text-xs px-4 py-1.5 rounded-lg transition-colors shrink-0 ml-3">
+                  Edit Profile
+                </button>
+              </div>
+
+              {/* Club */}
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className="w-4 h-4 bg-[#1a6b3c] rounded-sm flex items-center justify-center shrink-0">
+                  <Trophy size={9} className="text-white" />
+                </div>
+                <span className="text-white/55 text-xs">Western Province WCA</span>
+              </div>
+
+              {/* Meta row */}
+              <div className="flex items-center gap-2 text-white/40 text-xs mb-5 flex-wrap">
+                <span>19 years old</span>
+                <span className="text-white/20">•</span>
+                <span>🇱🇰 Sri Lankan</span>
+                <span className="text-white/20">•</span>
+                <span>All-rounder</span>
+                <span className="text-white/20">•</span>
+                <span>#7</span>
+              </div>
+
+              {/* Info grid — 2 columns with icons */}
+              <div className="flex gap-6">
+                <div className="flex-1 space-y-3">
+                  {playerInfoLeft.map(({ icon: Icon, label, value }) => (
+                    <div key={label} className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-md bg-white/5 border border-white/8 flex items-center justify-center shrink-0">
+                        <Icon size={13} className="text-white/35" />
+                      </div>
+                      <div>
+                        <p className="text-white/30 text-[10px]">{label}</p>
+                        <p className="text-white/75 text-xs font-medium">{value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex-1 space-y-3">
+                  {playerInfoRight.map(({ icon: Icon, label, value }) => (
+                    <div key={label} className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-md bg-white/5 border border-white/8 flex items-center justify-center shrink-0">
+                        <Icon size={13} className="text-white/35" />
+                      </div>
+                      <div>
+                        <p className="text-white/30 text-[10px]">{label}</p>
+                        <p className="text-white/75 text-xs font-medium">{value}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <button className="bg-[#1a6b3c] hover:bg-[#145c32] text-white text-xs px-4 py-1.5 rounded-lg transition-colors shrink-0">
-                Edit Profile
-              </button>
-            </div>
-            <div className="grid grid-cols-4 gap-x-6 gap-y-1.5">
-              {playerInfoRows.map(({ label, value }) => (
-                <div key={label} className="flex items-center gap-2">
-                  <span className="text-white/30 text-[11px] w-14 shrink-0">{label}</span>
-                  <span className="text-white/65 text-[11px]">{value}</span>
-                </div>
-              ))}
             </div>
           </div>
-        </div>
 
-        {/* Stats bar */}
-        <div className="bg-[#091320] border-b border-white/8 px-6 py-3 flex items-center divide-x divide-white/10 shrink-0">
-          {[
-            { label: 'Matches', value: '24' },
-            { label: 'Runs', value: '612' },
-            { label: 'Wickets', value: '18' },
-            { label: 'Batting Avg', value: '34.2' },
-          ].map(({ label, value }) => (
-            <div key={label} className="flex-1 px-6 first:pl-0">
-              <p className="text-white/35 text-[10px] mb-0.5">{label}</p>
-              <p className="text-white font-bold text-lg leading-tight">{value}</p>
+          {/* Stats bar — full width inside the card */}
+          <div className="border-t border-white/8 px-6 py-3 flex items-center divide-x divide-white/10">
+            {[
+              { label: 'Matches',     value: '24' },
+              { label: 'Runs',        value: '612' },
+              { label: 'Wickets',     value: '18' },
+              { label: 'Batting Avg', value: '34.2' },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex-1 px-5 first:pl-0">
+                <p className="text-white/35 text-[10px] mb-0.5">{label}</p>
+                <p className="text-white font-bold text-base leading-tight">{value}</p>
+              </div>
+            ))}
+            <div className="flex-1 px-5 flex items-center gap-2">
+              <span className="text-green-400 font-bold text-sm">▲ 6.4%</span>
+              <span className="text-white/30 text-[11px]">vs last season</span>
             </div>
-          ))}
-          <div className="flex-1 px-6 flex items-center gap-2">
-            <span className="text-green-400 font-bold text-sm">▲ 6.4%</span>
-            <span className="text-white/30 text-xs">vs last season</span>
           </div>
         </div>
 
