@@ -1,264 +1,407 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  LayoutDashboard,
-  User,
-  Users,
-  CalendarDays,
-  Trophy,
-  Bell,
-  Settings,
-  LogOut,
-  TrendingUp,
-  Bat,
-  Target,
-  Star,
-  ChevronRight,
-  Clock,
-  MapPin,
+  Home, Activity, CalendarDays, Newspaper, Star,
+  Settings, LogOut, ChevronRight, ChevronLeft, Trophy, Search,
 } from 'lucide-react'
 
-const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'profile', label: 'My Profile', icon: User },
-  { id: 'team', label: 'My Team', icon: Users },
-  { id: 'schedule', label: 'Schedule', icon: CalendarDays },
+const navLinks = [
+  { icon: Home, label: 'Home' },
+  { icon: Activity, label: 'Live Matches', badge: 2 },
+  { icon: CalendarDays, label: 'Calendar' },
+  { icon: Newspaper, label: 'News' },
+  { icon: Star, label: 'Subscription' },
 ]
 
-const statsCards = [
-  { label: 'Matches Played', value: '24', change: '+3 this season', icon: Trophy, color: 'text-green-400', bg: 'bg-green-400/10' },
-  { label: 'Total Runs', value: '612', change: '+87 this season', icon: TrendingUp, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-  { label: 'Wickets Taken', value: '18', change: '+4 this season', icon: Target, color: 'text-purple-400', bg: 'bg-purple-400/10' },
-  { label: 'Batting Avg', value: '34.2', change: '+2.1 this season', icon: Star, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
+const ageCategories = [
+  { label: 'Under 15', count: 24 },
+  { label: 'Under 17', count: 31 },
+  { label: 'Under 19', count: 28 },
+  { label: 'Senior', count: 45 },
 ]
 
-const upcomingMatches = [
-  {
-    opponent: 'Southern Province WC',
-    date: 'July 2, 2026',
-    time: '9:00 AM',
-    venue: 'Bloomfield Cricket Ground',
-    type: 'T20',
-    status: 'Confirmed',
-  },
-  {
-    opponent: 'Kandy WC',
-    date: 'July 8, 2026',
-    time: '2:00 PM',
-    venue: 'Nondescripts Cricket Club',
-    type: 'ODI',
-    status: 'Tentative',
-  },
-  {
-    opponent: 'Galle WC',
-    date: 'July 15, 2026',
-    time: '10:00 AM',
-    venue: 'Galle International Stadium',
-    type: 'T20',
-    status: 'Confirmed',
-  },
+const playerInfoRows = [
+  { label: 'Height', value: '165 cm' },
+  { label: 'Weight', value: '58 kg' },
+  { label: 'Role', value: 'All-rounder' },
+  { label: 'Batting', value: 'Right hand' },
+  { label: 'Age Group', value: 'Under 19' },
+  { label: 'Bowling', value: 'RA Medium' },
+  { label: 'Joined', value: 'Jan 15, 2024' },
+  { label: 'Reg. ends', value: 'Dec 31, 2026' },
 ]
 
-const recentActivity = [
-  { text: 'Your performance report for June has been shared.', time: '2 hours ago' },
-  { text: 'Coach Amara added a new training session on June 30.', time: '1 day ago' },
-  { text: 'You were selected for the T20 squad vs Southern Province.', time: '2 days ago' },
-  { text: 'Match result recorded: WP vs Kandy — WP won by 6 wickets.', time: '5 days ago' },
+const perfData = [
+  { year: '2021', runs: 80 },
+  { year: '2022', runs: 195 },
+  { year: '2023', runs: 280 },
+  { year: '2024', runs: 420 },
+  { year: '2025', runs: 530 },
+  { year: '2026', runs: 612 },
 ]
 
-export default function PlayerDashboard() {
-  const navigate = useNavigate()
-  const [active, setActive] = useState('dashboard')
+const calendarEvents = {
+  2:  { label: 'vs Southern', type: 'match' },
+  8:  { label: 'vs Kandy WC', type: 'match' },
+  15: { label: 'vs Galle WC', type: 'match' },
+  20: { label: 'Training',    type: 'training' },
+  30: { label: 'Team Meet',   type: 'meeting' },
+}
+
+// --- SVG line chart ---
+function PerfChart({ data }) {
+  const W = 500, H = 140
+  const pl = 38, pr = 16, pt = 12, pb = 28
+  const cw = W - pl - pr
+  const ch = H - pt - pb
+  const max = Math.max(...data.map(d => d.runs))
+
+  const pts = data.map((d, i) => ({
+    x: pl + (i / (data.length - 1)) * cw,
+    y: pt + ch - (d.runs / max) * ch,
+    ...d,
+  }))
+
+  const line = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ')
+  const area = `${line} L${pts.at(-1).x},${pt + ch} L${pts[0].x},${pt + ch} Z`
 
   return (
-    <div className="flex min-h-screen bg-[#060e1a]">
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full">
+      <defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#4ade80" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#4ade80" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {[0, 0.25, 0.5, 0.75, 1].map((f, i) => {
+        const y = pt + ch - f * ch
+        return (
+          <g key={i}>
+            <line x1={pl} y1={y} x2={W - pr} y2={y} stroke="#ffffff0d" strokeWidth="1" />
+            <text x={pl - 4} y={y + 3.5} textAnchor="end" fill="#ffffff35" fontSize="9">
+              {Math.round(max * f)}
+            </text>
+          </g>
+        )
+      })}
+      <path d={area} fill="url(#areaGrad)" />
+      <path d={line} fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      {pts.map((p, i) => (
+        <circle key={i} cx={p.x} cy={p.y} r="4" fill="#4ade80" stroke="#0d1520" strokeWidth="2" />
+      ))}
+      {pts.map((p, i) => (
+        <text key={i} x={p.x} y={H - 4} textAnchor="middle" fill="#ffffff45" fontSize="10">
+          {p.year}
+        </text>
+      ))}
+    </svg>
+  )
+}
+
+// --- Calendar ---
+function MatchCalendar() {
+  const [date, setDate] = useState(new Date(2026, 5, 1))
+  const year = date.getFullYear()
+  const month = date.getMonth()
+  const monthNames = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December']
+  const firstDay = new Date(year, month, 1).getDay()
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const today = 26
+
+  const cells = [
+    ...Array(firstDay).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ]
+
+  const upcoming = Object.entries(calendarEvents)
+    .filter(([d]) => Number(d) >= today)
+    .slice(0, 3)
+
+  const dotColor = { match: 'bg-green-400', training: 'bg-blue-400', meeting: 'bg-yellow-400' }
+  const cellColor = {
+    match:    'bg-green-400/15 text-green-400 font-medium',
+    training: 'bg-blue-400/15 text-blue-400',
+    meeting:  'bg-yellow-400/15 text-yellow-400',
+  }
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Month nav */}
+      <div className="flex items-center justify-between mb-3">
+        <button onClick={() => setDate(new Date(year, month - 1, 1))} className="text-white/40 hover:text-white p-1 transition-colors">
+          <ChevronLeft size={14} />
+        </button>
+        <span className="text-white text-sm font-medium">{monthNames[month]} {year}</span>
+        <button onClick={() => setDate(new Date(year, month + 1, 1))} className="text-white/40 hover:text-white p-1 transition-colors">
+          <ChevronRight size={14} />
+        </button>
+      </div>
+
+      {/* Day headers */}
+      <div className="grid grid-cols-7 mb-1">
+        {['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => (
+          <div key={d} className="text-center text-[10px] text-white/25 pb-1">{d}</div>
+        ))}
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-7 gap-0.5 mb-4">
+        {cells.map((d, i) => {
+          const ev = d ? calendarEvents[d] : null
+          const isToday = d === today
+          return (
+            <div key={i} className={`relative aspect-square flex items-center justify-center text-[11px] rounded ${
+              isToday ? 'bg-green-500 text-white font-bold' :
+              ev ? cellColor[ev.type] :
+              d ? 'text-white/55 hover:bg-white/5 cursor-pointer' : ''
+            }`}>
+              {d ?? ''}
+              {ev && !isToday && (
+                <span className={`absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${dotColor[ev.type]}`} />
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Legend */}
+      <div className="flex items-center gap-3 mb-3">
+        {[['match','Match','bg-green-400'],['training','Training','bg-blue-400'],['meeting','Meeting','bg-yellow-400']].map(([,label,cls]) => (
+          <span key={label} className="flex items-center gap-1 text-[10px] text-white/40">
+            <span className={`w-1.5 h-1.5 rounded-full ${cls}`} />
+            {label}
+          </span>
+        ))}
+      </div>
+
+      {/* Upcoming */}
+      <p className="text-white/25 text-[9px] tracking-widest mb-2">UPCOMING</p>
+      <div className="space-y-1.5 flex-1">
+        {upcoming.map(([day, ev]) => (
+          <div key={day} className="flex items-center gap-2.5 bg-white/3 rounded-lg px-3 py-2">
+            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor[ev.type]}`} />
+            <div>
+              <p className="text-white/70 text-xs">{ev.label}</p>
+              <p className="text-white/30 text-[10px]">Jun {day}, 2026</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// --- Main page ---
+export default function PlayerDashboard() {
+  const navigate = useNavigate()
+  const [activeNav, setActiveNav] = useState('Home')
+
+  return (
+    <div className="flex min-h-screen bg-[#0d1520] text-white overflow-hidden">
 
       {/* Sidebar */}
-      <aside className="w-60 bg-[#0a1628] border-r border-white/10 flex flex-col shrink-0">
+      <aside className="w-52 bg-[#080f1a] border-r border-white/8 flex flex-col shrink-0">
         {/* Logo */}
-        <div className="px-6 py-5 border-b border-white/10 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#1a6b3c] rounded-lg flex items-center justify-center">
-            <Trophy size={16} className="text-white" />
-          </div>
-          <div>
-            <p className="text-white text-xs font-semibold leading-tight">WPCA</p>
-            <p className="text-white/40 text-[10px]">Women's Cricket</p>
+        <div className="px-5 pt-5 pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-[#1a6b3c] rounded-md flex items-center justify-center">
+              <Trophy size={13} className="text-white" />
+            </div>
+            <span className="text-white text-xs font-semibold tracking-wide">WPCA Cricket</span>
           </div>
         </div>
 
-        {/* Player avatar */}
-        <div className="px-6 py-5 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-[#1a6b3c] flex items-center justify-center text-white font-bold text-sm">
-              AP
-            </div>
-            <div>
-              <p className="text-white text-sm font-medium">Anjali Perera</p>
-              <p className="text-white/40 text-xs">Right-hand Bat · Age U19</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {navItems.map(({ id, label, icon: Icon }) => (
+        {/* Nav links */}
+        <div className="px-3 mb-5">
+          <p className="text-white/25 text-[9px] tracking-widest px-2 mb-1.5">NAVIGATION</p>
+          {navLinks.map(({ icon: Icon, label, badge }) => (
             <button
-              key={id}
-              onClick={() => setActive(id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${
-                active === id
-                  ? 'bg-green-400/10 text-green-400 border border-green-400/20'
-                  : 'text-white/50 hover:text-white hover:bg-white/5'
+              key={label}
+              onClick={() => setActiveNav(label)}
+              className={`w-full flex items-center justify-between px-2 py-2 rounded-md text-xs transition-all mb-0.5 ${
+                activeNav === label ? 'bg-white/8 text-white' : 'text-white/45 hover:text-white/75 hover:bg-white/5'
               }`}
             >
-              <Icon size={17} />
-              {label}
+              <span className="flex items-center gap-2.5"><Icon size={14} />{label}</span>
+              {badge && (
+                <span className="bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {badge}
+                </span>
+              )}
             </button>
           ))}
-        </nav>
+        </div>
 
-        {/* Bottom actions */}
-        <div className="px-3 pb-5 space-y-1">
-          <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all">
-            <Settings size={17} />
-            Settings
+        {/* Age categories */}
+        <div className="px-3 mb-4">
+          <p className="text-white/25 text-[9px] tracking-widest px-2 mb-1.5">AGE CATEGORIES</p>
+          {ageCategories.map(({ label, count }) => (
+            <button key={label} className="w-full flex items-center justify-between px-2 py-1.5 rounded-md text-xs text-white/45 hover:text-white/75 hover:bg-white/5 transition-all">
+              <span>{label}</span>
+              <span className="text-white/25">{count}</span>
+            </button>
+          ))}
+          <button className="flex items-center gap-1 px-2 py-1.5 text-xs text-white/25 hover:text-white/45 transition-colors">
+            View all <ChevronRight size={11} />
+          </button>
+        </div>
+
+        <div className="flex-1" />
+
+        {/* Bottom */}
+        <div className="px-3 pb-4 space-y-0.5">
+          <button className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-xs text-white/45 hover:text-white/75 hover:bg-white/5 transition-all">
+            <Settings size={14} />Settings
           </button>
           <button
             onClick={() => navigate('/login')}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 hover:text-red-400 hover:bg-red-400/5 transition-all"
+            className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-xs text-white/45 hover:text-red-400 hover:bg-red-400/5 transition-all"
           >
-            <LogOut size={17} />
-            Sign out
+            <LogOut size={14} />Logout
           </button>
+          <div className="flex items-center gap-2.5 px-2 pt-3 mt-1 border-t border-white/8">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-[#1a6b3c] flex items-center justify-center text-[10px] font-bold shrink-0">
+              AP
+            </div>
+            <div className="min-w-0">
+              <p className="text-white text-[11px] font-medium truncate">Anjali Perera</p>
+              <p className="text-white/30 text-[9px] truncate">anjali@wpca.lk</p>
+            </div>
+          </div>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 overflow-y-auto">
+      {/* Main */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
 
         {/* Top bar */}
-        <header className="sticky top-0 z-10 bg-[#060e1a]/90 backdrop-blur border-b border-white/10 px-8 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-white font-semibold text-lg">
-              {navItems.find(n => n.id === active)?.label ?? 'Dashboard'}
-            </h1>
-            <p className="text-white/40 text-xs">Wednesday, June 25, 2026</p>
+        <header className="flex items-center justify-between px-6 py-3 border-b border-white/8 shrink-0">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-white/35">Home</span>
+            <ChevronRight size={12} className="text-white/20" />
+            <span className="text-white/70">Players</span>
           </div>
-          <button className="relative text-white/50 hover:text-white transition-colors">
-            <Bell size={20} />
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">3</span>
-          </button>
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5">
+              <CalendarDays size={12} className="text-white/30" />
+              <span className="text-white/45 text-xs">Season 2025/2026</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 w-40">
+              <Search size={12} className="text-white/30" />
+              <input type="text" placeholder="Search players..." className="bg-transparent text-xs text-white placeholder-white/25 outline-none flex-1 w-full" />
+            </div>
+          </div>
         </header>
 
-        {/* Dashboard content */}
-        {active === 'dashboard' && (
-          <div className="px-8 py-6 space-y-6">
+        {/* Player card */}
+        <div className="bg-[#0a1420] border-b border-white/8 px-6 py-5 flex items-center gap-6 shrink-0">
+          {/* Avatar */}
+          <div className="relative shrink-0">
+            <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-[#1a6b3c] to-[#061510] flex items-center justify-center text-2xl font-bold text-white/70 border border-white/10">
+              AP
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#0a1420]" />
+          </div>
 
-            {/* Welcome banner */}
-            <div className="bg-gradient-to-r from-[#1a6b3c]/40 to-[#0a1628] border border-green-400/20 rounded-xl px-6 py-5 flex items-center justify-between">
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between mb-2.5">
               <div>
-                <p className="text-green-400 text-xs tracking-widest mb-1">GOOD MORNING</p>
-                <h2 className="text-white text-xl font-bold">Anjali Perera</h2>
-                <p className="text-white/50 text-sm mt-1">Your next match is in <span className="text-green-400 font-medium">7 days</span>. Keep training hard!</p>
+                <h1 className="text-white text-xl font-bold leading-tight">Anjali Perera</h1>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <span className="flex items-center gap-1 text-white/45 text-xs">
+                    <Trophy size={10} className="text-green-400" /> Western Province WCA
+                  </span>
+                  <span className="text-white/20 text-xs">•</span>
+                  <span className="text-white/45 text-xs">🇱🇰 Sri Lankan</span>
+                  <span className="text-white/20 text-xs">•</span>
+                  <span className="text-white/45 text-xs">All-rounder</span>
+                  <span className="text-white/20 text-xs">•</span>
+                  <span className="text-white/45 text-xs">#7</span>
+                </div>
               </div>
-              <div className="hidden sm:flex w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-[#1a6b3c] items-center justify-center text-white font-bold text-xl">
-                AP
+              <button className="bg-[#1a6b3c] hover:bg-[#145c32] text-white text-xs px-4 py-1.5 rounded-lg transition-colors shrink-0">
+                Edit Profile
+              </button>
+            </div>
+            <div className="grid grid-cols-4 gap-x-6 gap-y-1.5">
+              {playerInfoRows.map(({ label, value }) => (
+                <div key={label} className="flex items-center gap-2">
+                  <span className="text-white/30 text-[11px] w-14 shrink-0">{label}</span>
+                  <span className="text-white/65 text-[11px]">{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Stats bar */}
+        <div className="bg-[#091320] border-b border-white/8 px-6 py-3 flex items-center divide-x divide-white/10 shrink-0">
+          {[
+            { label: 'Matches', value: '24' },
+            { label: 'Runs', value: '612' },
+            { label: 'Wickets', value: '18' },
+            { label: 'Batting Avg', value: '34.2' },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex-1 px-6 first:pl-0">
+              <p className="text-white/35 text-[10px] mb-0.5">{label}</p>
+              <p className="text-white font-bold text-lg leading-tight">{value}</p>
+            </div>
+          ))}
+          <div className="flex-1 px-6 flex items-center gap-2">
+            <span className="text-green-400 font-bold text-sm">▲ 6.4%</span>
+            <span className="text-white/30 text-xs">vs last season</span>
+          </div>
+        </div>
+
+        {/* Bottom: chart + calendar */}
+        <div className="flex flex-1 min-h-0">
+
+          {/* Performance chart */}
+          <div className="flex-1 border-r border-white/8 p-5 flex flex-col min-w-0">
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <p className="text-white font-semibold text-sm">Performance: 612 Runs</p>
+                <p className="text-white/30 text-xs mt-0.5">Highest: 612 runs (2026 Season)</p>
+              </div>
+              <div className="flex bg-white/5 rounded-lg p-1 gap-0.5">
+                {['Runs', 'Wickets', 'Avg'].map((t, i) => (
+                  <button key={t} className={`px-2.5 py-1 rounded text-xs transition-colors ${
+                    i === 0 ? 'bg-white/10 text-white' : 'text-white/35 hover:text-white/60'
+                  }`}>{t}</button>
+                ))}
               </div>
             </div>
 
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-              {statsCards.map(({ label, value, change, icon: Icon, color, bg }) => (
-                <div key={label} className="bg-[#0a1628] border border-white/10 rounded-xl p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-white/50 text-xs">{label}</p>
-                    <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center`}>
-                      <Icon size={15} className={color} />
-                    </div>
-                  </div>
-                  <p className={`text-2xl font-bold ${color}`}>{value}</p>
-                  <p className="text-white/30 text-xs mt-1">{change}</p>
+            {/* Mini stat cards */}
+            <div className="grid grid-cols-4 gap-3 mb-4">
+              {[
+                { label: 'Current season', value: '612 runs' },
+                { label: 'Career best',    value: '612 runs' },
+                { label: 'Career low',     value: '80 runs' },
+                { label: 'Growth',         value: '+665%', green: true },
+              ].map(({ label, value, green }) => (
+                <div key={label} className="bg-white/3 border border-white/8 rounded-lg px-3 py-2">
+                  <p className="text-white/30 text-[10px] mb-0.5">{label}</p>
+                  <p className={`font-semibold text-sm ${green ? 'text-green-400' : 'text-white'}`}>{value}</p>
                 </div>
               ))}
             </div>
 
-            {/* Upcoming matches + recent activity */}
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-
-              {/* Upcoming matches */}
-              <div className="xl:col-span-2 bg-[#0a1628] border border-white/10 rounded-xl p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-white font-semibold text-sm">Upcoming Matches</h3>
-                  <button className="text-green-400 text-xs hover:underline flex items-center gap-1">
-                    View all <ChevronRight size={13} />
-                  </button>
-                </div>
-                <div className="space-y-3">
-                  {upcomingMatches.map((match, i) => (
-                    <div key={i} className="flex items-center gap-4 bg-white/3 rounded-lg px-4 py-3 border border-white/5">
-                      <div className="text-center shrink-0">
-                        <p className="text-green-400 font-bold text-xs">{match.type}</p>
-                        <p className="text-white/30 text-[10px] mt-0.5">{match.date}</p>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-medium truncate">vs {match.opponent}</p>
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="flex items-center gap-1 text-white/40 text-xs">
-                            <Clock size={11} /> {match.time}
-                          </span>
-                          <span className="flex items-center gap-1 text-white/40 text-xs truncate">
-                            <MapPin size={11} /> {match.venue}
-                          </span>
-                        </div>
-                      </div>
-                      <span className={`shrink-0 text-xs px-2.5 py-1 rounded-full border ${
-                        match.status === 'Confirmed'
-                          ? 'bg-green-400/10 text-green-400 border-green-400/20'
-                          : 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20'
-                      }`}>
-                        {match.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Recent activity */}
-              <div className="bg-[#0a1628] border border-white/10 rounded-xl p-5">
-                <h3 className="text-white font-semibold text-sm mb-4">Recent Activity</h3>
-                <div className="space-y-4">
-                  {recentActivity.map((item, i) => (
-                    <div key={i} className="flex gap-3">
-                      <div className="mt-1 w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
-                      <div>
-                        <p className="text-white/70 text-xs leading-relaxed">{item.text}</p>
-                        <p className="text-white/30 text-[10px] mt-1">{item.time}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
+            <div className="flex-1 min-h-0">
+              <PerfChart data={perfData} />
             </div>
           </div>
-        )}
 
-        {/* Placeholder for other sections */}
-        {active !== 'dashboard' && (
-          <div className="flex items-center justify-center h-[60vh]">
-            <div className="text-center">
-              <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
-                {(() => {
-                  const Icon = navItems.find(n => n.id === active)?.icon
-                  return Icon ? <Icon size={22} className="text-white/30" /> : null
-                })()}
-              </div>
-              <p className="text-white/40 text-sm">{navItems.find(n => n.id === active)?.label} — coming soon</p>
-            </div>
+          {/* Calendar */}
+          <div className="w-72 shrink-0 p-5 flex flex-col">
+            <p className="text-white font-semibold text-sm mb-4">Match Calendar</p>
+            <MatchCalendar />
           </div>
-        )}
 
-      </main>
+        </div>
+      </div>
     </div>
   )
 }
