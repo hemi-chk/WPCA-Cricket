@@ -295,17 +295,28 @@ export default function PlayerDashboard() {
         </header>
 
         {/* Player card */}
-        <div className="bg-[#0a1420] border-b border-white/8 px-6 py-5 flex items-center gap-6 shrink-0">
-          {/* Avatar */}
-          <div className="relative shrink-0">
-            <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-[#1a6b3c] to-[#061510] flex items-center justify-center text-2xl font-bold text-white/70 border border-white/10">
-              AP
+        <div className="bg-[#0a1420] border-b border-white/8 flex items-stretch gap-0 shrink-0 min-h-48">
+          {/* Large player image placeholder */}
+          <div className="relative w-44 shrink-0 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1a6b3c]/40 via-[#0a1420] to-[#060e18]" />
+            <div
+              className="absolute inset-0 opacity-[0.04]"
+              style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '18px 18px' }}
+            />
+            <div className="relative z-10 h-full flex flex-col items-center justify-center gap-3">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/40 to-[#1a6b3c]/20 border-2 border-white/10 flex items-center justify-center text-3xl font-bold text-white/25">
+                AP
+              </div>
+              <p className="text-white/20 text-[10px] tracking-widest">PLAYER PHOTO</p>
             </div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#0a1420]" />
+            {/* Bottom fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0a1420] to-transparent" />
+            {/* Right fade into content */}
+            <div className="absolute top-0 right-0 bottom-0 w-10 bg-gradient-to-l from-[#0a1420] to-transparent" />
           </div>
 
           {/* Info */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 px-6 py-5">
             <div className="flex items-start justify-between mb-2.5">
               <div>
                 <h1 className="text-white text-xl font-bold leading-tight">Anjali Perera</h1>
