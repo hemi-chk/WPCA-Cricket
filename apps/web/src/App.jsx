@@ -10,6 +10,8 @@ import Login from './pages/Login'
 import ContactAdmin from './pages/ContactAdmin'
 import ForgotPassword from './pages/ForgotPassword'
 import PlayerDashboard from './pages/PlayerDashboard'
+import AgeCategoryDetail from "./pages/AgeCategoryDetail";
+
 
 
 
@@ -53,6 +55,7 @@ function App() {
         <Route path="/contact-admin" element={<ContactAdmin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/player" element={<PlayerDashboard />} />
+        <Route path="/age-category/:slug" element={<AgeCategoryDetail />} />
       </Routes>
     </BrowserRouter>
   )
