@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from "react-router-dom";
 
 const stats = [
   { num: '100+', label: 'Registered players' },
@@ -9,6 +10,8 @@ const stats = [
 ]
 
 export default function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className="min-h-[520px] flex items-center px-10 py-16">
       <div className="max-w-xl">
@@ -22,7 +25,12 @@ export default function Hero() {
           The official management platform for Western Province Women's Cricket Association. We  Track performance, manage teams, and grow the women's game.
         </p>
         <div className="flex gap-3 mb-10">
-          <Button className="bg-[#1a6b3c] hover:bg-[#145c32] text-white px-7">Get started</Button>
+          <Button
+            className="bg-[#1a6b3c] hover:bg-[#145c32] text-white px-7"
+            onClick={() => navigate("/login")}
+          >
+            Get started
+          </Button>
           <Button variant="outline" className="text-white border-white/30 bg-transparent hover:bg-white/10 px-7">View matches</Button>
         </div>
         <div className="flex gap-8">
