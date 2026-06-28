@@ -6,7 +6,7 @@ const placeholderData = {
   u13: {
     title: "Under 13",
     tagline: "Future stars",
-    eligibility: "Open to girls aged 11–13 as of January 1st of the current year. Players must be registered with a WPCA-affiliated school or club.",
+    eligibility: "Players who selected at U13 selections at provincial level",
     nextSelection: { date: "2026-07-15", venue: "P. Sara Oval, Colombo", time: "8:30 AM" },
     practices: [
       { day: "Tuesday", time: "4:00 – 6:00 PM", venue: "Colombo Cricket Club Ground" },
@@ -20,7 +20,7 @@ const placeholderData = {
   u15: {
     title: "Under 15",
     tagline: "Rising talent",
-    eligibility: "Open to girls aged 13–15 as of January 1st of the current year.",
+    eligibility: "Players who selected at U15 selections at provincial level",
     nextSelection: { date: "2026-07-20", venue: "SSC Ground, Colombo", time: "9:00 AM" },
     practices: [
       { day: "Wednesday", time: "4:00 – 6:00 PM", venue: "SSC Ground" },
@@ -33,7 +33,7 @@ const placeholderData = {
   u19: {
     title: "Under 19",
     tagline: "Elite prospects",
-    eligibility: "Open to girls aged 16–19 as of January 1st of the current year.",
+    eligibility: "Players who selected at U19 selections at provincial level",
     nextSelection: { date: "2026-08-01", venue: "Colts Cricket Club", time: "9:00 AM" },
     practices: [
       { day: "Monday", time: "4:30 – 6:30 PM", venue: "Colts Cricket Club" },
@@ -46,7 +46,7 @@ const placeholderData = {
   u23: {
     title: "Under 23",
     tagline: "Senior pathway",
-    eligibility: "Open to women aged 20–23 as of January 1st of the current year.",
+    eligibility: "Players who selected at U13 selections at provincial level",
     nextSelection: { date: "2026-08-10", venue: "P. Sara Oval, Colombo", time: "9:30 AM" },
     practices: [
       { day: "Tuesday", time: "5:00 – 7:00 PM", venue: "P. Sara Oval" },
