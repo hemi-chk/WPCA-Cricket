@@ -324,7 +324,7 @@ export default function PlayerDashboard() {
               {/* Name + button */}
               <div className="flex items-start justify-between mb-1">
                 <h1 className="text-white text-2xl font-bold leading-tight">Anjali Perera</h1>
-                <button className="bg-[#1a6b3c] hover:bg-[#145c32] text-white text-xs px-4 py-1.5 rounded-lg transition-colors shrink-0 ml-3">
+                <button className="bg-blue-400 hover:bg-blue-300 text-white text-xs px-4 py-1.5 rounded-lg transition-colors shrink-0 ml-3">
                   Edit Profile
                 </button>
               </div>
