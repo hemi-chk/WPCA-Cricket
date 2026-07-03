@@ -11,6 +11,7 @@ import ContactAdmin from './pages/ContactAdmin'
 import ForgotPassword from './pages/ForgotPassword'
 import PlayerDashboard from './pages/PlayerDashboard'
 import AgeCategoryDetail from "./pages/AgeCategoryDetail";
+import PlayerCalendar from './pages/PlayerCalendar'
 
 
 
