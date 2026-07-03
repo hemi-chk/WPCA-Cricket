@@ -56,6 +56,7 @@ function App() {
         <Route path="/contact-admin" element={<ContactAdmin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/player" element={<PlayerDashboard />} />
+        <Route path="/player/calendar" element={<PlayerCalendar />} />
         <Route path="/age-category/:slug" element={<AgeCategoryDetail />} />
       </Routes>
     </BrowserRouter>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   Home, Activity, CalendarDays, Newspaper, Star,
   Settings, LogOut, ChevronRight, ChevronLeft, Trophy, Search,
-  Ruler, Scale, Shirt, Flag, Users, Target, Clock,
+  Ruler, Scale, Shirt, Flag, Users, Clock,
 } from 'lucide-react'
 
 const navLinks = [
@@ -222,7 +222,10 @@ export default function PlayerDashboard() {
           {navLinks.map(({ icon: Icon, label, badge }) => (
             <button
               key={label}
-              onClick={() => setActiveNav(label)}
+              onClick={() => {
+                if (label === 'Calendar') navigate('/player/calendar')
+                else setActiveNav(label)
+              }}
               className={`w-full flex items-center justify-between px-2 py-2 rounded-md text-xs transition-all mb-0.5 ${
                 activeNav === label ? 'bg-white/8 text-white' : 'text-white/45 hover:text-white/75 hover:bg-white/5'
               }`}
