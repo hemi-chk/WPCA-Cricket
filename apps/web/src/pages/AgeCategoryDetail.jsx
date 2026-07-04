@@ -98,7 +98,7 @@ export default function AgeCategoryDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
         {/* Next selection */}
         <div className="border border-green-400/30 rounded-2xl p-8 bg-white/5">
-          <p className="text-green-400 text-xs tracking-widest uppercase font-medium mb-4">Next selection</p>
+          <p className="text-green-400 text-lg font-bold mb-4">Next Selection</p>
           <div className="text-2xl font-bold text-white mb-2">{data.nextSelection.date}</div>
           <div className="text-white/60 text-sm">{data.nextSelection.time}</div>
           <div className="text-white/60 text-sm">{data.nextSelection.venue}</div>
@@ -106,13 +106,13 @@ export default function AgeCategoryDetail() {
 
         {/* Eligibility */}
         <div className="border border-green-400/30 rounded-2xl p-8 bg-white/5">
-          <p className="text-green-400 text-xs tracking-widest uppercase font-medium mb-4">Who can join</p>
+          <p className="text-green-400 text-lg font-bold mb-4">Who Can Join</p>
           <p className="text-white/70 text-sm leading-relaxed">{data.eligibility}</p>
         </div>
 
         {/* Practices */}
         <div className="border border-green-400/30 rounded-2xl p-8 bg-white/5">
-          <p className="text-green-400 text-xs tracking-widest uppercase font-medium mb-4">Practice schedule</p>
+          <p className="text-green-400 text-lg font-bold mb-4">Practice Schedule</p>
           <div className="space-y-3">
             {data.practices.map((p, i) => (
               <div key={i} className="flex justify-between items-start border-b border-white/10 pb-3 last:border-0">
@@ -128,7 +128,7 @@ export default function AgeCategoryDetail() {
 
         {/* Tournaments */}
         <div className="border border-green-400/30 rounded-2xl p-8 bg-white/5">
-          <p className="text-green-400 text-xs tracking-widest uppercase font-medium mb-4">Tournaments</p>
+          <p className="text-green-400 text-lg font-bold mb-4">Tournaments</p>
           <div className="space-y-3">
             {data.tournaments.map((t, i) => (
               <div key={i} className="flex justify-between items-start border-b border-white/10 pb-3 last:border-0">
