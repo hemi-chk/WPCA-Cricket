@@ -1,5 +1,6 @@
 import express from 'express'
 import Player from '../models/Player.js'
+import { chainRegisterPlayer } from '../blockchain/index.js'
 
 const router = express.Router()
 
@@ -28,10 +29,21 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// POST create player
+// POST create player — also writes to blockchain
 router.post('/', async (req, res) => {
   try {
     const player = await Player.create(req.body)
+
+    // Fire-and-forget: write to Sepolia (doesn't block the response)
+    chainRegisterPlayer({
+      mongoId:     player._id.toString(),
+      name:        player.name,
+      ageCategory: player.ageCategory,
+      teamName:    req.body.teamName ?? '',
+    }).then(receipt => {
+      if (receipt) Player.findByIdAndUpdate(player._id, { txHash: receipt.txHash }).exec()
+    })
+
     res.status(201).json(player)
   } catch (err) {
     res.status(400).json({ error: err.message })

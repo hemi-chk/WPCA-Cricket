@@ -16,6 +16,7 @@ const playerSchema = new mongoose.Schema(
     team:           { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
     registrationEnd:{ type: Date },
     joinedAt:       { type: Date },
+    txHash:         { type: String },
     stats: {
       matches:    { type: Number, default: 0 },
       runs:       { type: Number, default: 0 },

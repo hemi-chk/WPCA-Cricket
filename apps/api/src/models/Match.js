@@ -12,6 +12,7 @@ const matchSchema = new mongoose.Schema(
     result:      { type: String, enum: ['Won', 'Lost', 'Draw', 'No Result'] },
     mvp:         { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
     notes:       { type: String },
+    txHash:      { type: String },
   },
   { timestamps: true }
 )

@@ -1,5 +1,7 @@
 import express from 'express'
-import Match from '../models/Match.js'
+import Match  from '../models/Match.js'
+import Team   from '../models/Team.js'
+import { chainRecordMatch } from '../blockchain/index.js'
 
 const router = express.Router()
 
@@ -34,6 +36,24 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const match = await Match.create(req.body)
+
+    // Resolve team names then write to blockchain
+    Promise.all([
+      Team.findById(match.homeTeam).lean(),
+      Team.findById(match.awayTeam).lean(),
+    ]).then(([home, away]) => chainRecordMatch({
+      mongoId:   match._id.toString(),
+      homeTeam:  home?.name ?? '',
+      awayTeam:  away?.name ?? '',
+      homeScore: match.homeScore ?? '',
+      awayScore: match.awayScore ?? '',
+      result:    match.result ?? '',
+      venue:     match.venue ?? '',
+      matchDate: match.date,
+    })).then(receipt => {
+      if (receipt) Match.findByIdAndUpdate(match._id, { txHash: receipt.txHash }).exec()
+    })
+
     res.status(201).json(match)
   } catch (err) {
     res.status(400).json({ error: err.message })

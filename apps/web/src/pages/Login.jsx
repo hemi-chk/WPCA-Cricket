@@ -1,18 +1,49 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { User, AudioWaveform, ClipboardList, Trophy, Eye, EyeOff, ArrowLeft } from 'lucide-react'
+import { User, AudioWaveform, ClipboardList, Trophy, Eye, EyeOff, ArrowLeft, Loader, AlertCircle } from 'lucide-react'
+import { API } from '../lib/api.js'
 
 export default function Login() {
   const navigate = useNavigate()
-  const [role, setRole] = useState('player')
+  const [role,         setRole]         = useState('player')
+  const [email,        setEmail]        = useState('')
+  const [password,     setPassword]     = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [loading,      setLoading]      = useState(false)
+  const [error,        setError]        = useState('')
 
   const roles = [
-    { id: 'player', label: 'Player', icon: <User size={22} /> },
-    { id: 'coach', label: 'Coach', icon: <AudioWaveform size={22} /> },
+    { id: 'player',   label: 'Player',   icon: <User size={22} /> },
+    { id: 'coach',    label: 'Coach',    icon: <AudioWaveform size={22} /> },
     { id: 'selector', label: 'Selector', icon: <ClipboardList size={22} /> },
   ]
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+    try {
+      const res  = await fetch(`${API}/api/auth/login`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, password }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Login failed'); return }
+
+      localStorage.setItem('wpca_token', data.token)
+      localStorage.setItem('wpca_user',  JSON.stringify(data.user))
+
+      // Redirect based on role
+      if (data.user.role === 'admin' || data.user.role === 'coach') navigate('/player')
+      else navigate('/player')
+    } catch {
+      setError('Could not connect to server. Make sure the API is running.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="grid grid-cols-2 min-h-screen">
@@ -49,13 +80,11 @@ export default function Login() {
 
         <div className="relative z-10 w-full max-w-sm">
 
-          {/* Back to home */}
           <button
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors text-sm mb-8"
           >
-            <ArrowLeft size={16} />
-            Back to home
+            <ArrowLeft size={16} /> Back to home
           </button>
 
           <h2 className="text-3xl font-bold text-white mb-1">Sign in</h2>
@@ -69,9 +98,7 @@ export default function Login() {
                 key={r.id}
                 onClick={() => setRole(r.id)}
                 className={`border rounded-lg py-3 px-2 text-center transition-all ${
-                  role === r.id
-                    ? 'border-green-400 bg-green-400/10'
-                    : 'border-white/15 hover:border-green-400/50'
+                  role === r.id ? 'border-green-400 bg-green-400/10' : 'border-white/15 hover:border-green-400/50'
                 }`}
               >
                 <div className={`flex justify-center mb-1 ${role === r.id ? 'text-green-400' : 'text-white/50'}`}>
@@ -82,45 +109,69 @@ export default function Login() {
             ))}
           </div>
 
-          {/* Email */}
-          <div className="mb-4">
-            <label className="text-white/50 text-xs tracking-widest block mb-2">EMAIL ADDRESS</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm placeholder-white/25 outline-none focus:border-green-400 transition-colors"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* Password */}
-          <div className="mb-2">
-            <label className="text-white/50 text-xs tracking-widest block mb-2">PASSWORD</label>
-            <div className="relative">
+            {/* Error */}
+            {error && (
+              <div className="flex items-center gap-2 bg-red-400/10 border border-red-400/25 rounded-lg px-4 py-3 text-red-400 text-sm">
+                <AlertCircle size={15} className="shrink-0" />
+                {error}
+              </div>
+            )}
+
+            {/* Email */}
+            <div>
+              <label className="text-white/50 text-xs tracking-widest block mb-2">EMAIL ADDRESS</label>
               <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm placeholder-white/25 outline-none focus:border-green-400 transition-colors pr-10"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm placeholder-white/25 outline-none focus:border-green-400 transition-colors"
               />
-              <button
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
             </div>
-          </div>
 
-          {/* Forgot */}
-         <a onClick={() => navigate('/forgot-password')} className="text-green-400 text-xs hover:underline cursor-pointer">
-  Forgot password?
-</a>
+            {/* Password */}
+            <div>
+              <label className="text-white/50 text-xs tracking-widest block mb-2">PASSWORD</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                  className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm placeholder-white/25 outline-none focus:border-green-400 transition-colors pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
 
-          {/* Submit */}
-          <Button className="w-full bg-[#1a6b3c] hover:bg-[#145c32] text-white py-6 text-sm font-bold tracking-widest">
-            SIGN IN
-          </Button>
+            <button
+              type="button"
+              onClick={() => navigate('/forgot-password')}
+              className="text-green-400 text-xs hover:underline"
+            >
+              Forgot password?
+            </button>
 
-          {/* Contact admin link */}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#1a6b3c] hover:bg-[#145c32] text-white py-6 text-sm font-bold tracking-widest disabled:opacity-50"
+            >
+              {loading ? <Loader size={16} className="animate-spin mr-2" /> : null}
+              {loading ? 'SIGNING IN…' : 'SIGN IN'}
+            </Button>
+          </form>
+
           <p className="text-center text-white/40 text-sm mt-6">
             Don't have an account?{' '}
             <span

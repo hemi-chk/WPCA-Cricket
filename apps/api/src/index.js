@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 
+import authRoutes            from './routes/auth.js'
 import playerRoutes          from './routes/players.js'
 import teamRoutes            from './routes/teams.js'
 import matchRoutes           from './routes/matches.js'
@@ -15,6 +16,7 @@ app.use(cors())
 app.use(express.json())
 
 // Routes
+app.use('/api/auth',             authRoutes)
 app.use('/api/players',          playerRoutes)
 app.use('/api/teams',            teamRoutes)
 app.use('/api/matches',          matchRoutes)
