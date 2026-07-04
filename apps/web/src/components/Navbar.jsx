@@ -24,7 +24,7 @@ export default function Navbar() {
           {navLinks.map(link => (
             <button
               key={link}
-              onClick={() => setShowPrompt(true)}
+              onClick={() => link === 'Teams' ? navigate('/teams') : setShowPrompt(true)}
               className="text-white/70 text-sm hover:text-white transition-colors"
             >
               {link}

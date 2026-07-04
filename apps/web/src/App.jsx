@@ -12,6 +12,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import PlayerDashboard from './pages/PlayerDashboard'
 import AgeCategoryDetail from "./pages/AgeCategoryDetail";
 import PlayerCalendar from './pages/PlayerCalendar'
+import Teams from './pages/Teams'
 
 
 
@@ -56,6 +57,7 @@ function App() {
         <Route path="/contact-admin" element={<ContactAdmin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/player" element={<PlayerDashboard />} />
+        <Route path="/teams" element={<Teams />} />
         <Route path="/player/calendar" element={<PlayerCalendar />} />
         <Route path="/age-category/:slug" element={<AgeCategoryDetail />} />
       </Routes>
