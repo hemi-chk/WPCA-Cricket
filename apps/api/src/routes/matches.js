@@ -10,6 +10,7 @@ router.get('/', async (req, res) => {
     const filter = {}
     if (req.query.type)   filter.type   = req.query.type
     if (req.query.result) filter.result = req.query.result
+    if (req.query.team)   filter.$or    = [{ homeTeam: req.query.team }, { awayTeam: req.query.team }]
     const matches = await Match
       .find(filter)
       .populate('homeTeam', 'name shortName')
