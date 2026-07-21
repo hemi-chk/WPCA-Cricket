@@ -36,7 +36,7 @@ export default function Login() {
       localStorage.setItem('wpca_user',  JSON.stringify(data.user))
 
       // Redirect based on role
-      if (data.user.role === 'admin' || data.user.role === 'coach') navigate('/player')
+      if (data.user.role === 'coach') navigate('/coach')
       else navigate('/player')
     } catch {
       setError('Could not connect to server. Make sure the API is running.')

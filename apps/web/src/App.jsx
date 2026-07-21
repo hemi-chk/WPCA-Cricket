@@ -16,6 +16,8 @@ import PlayerCalendar from './pages/PlayerCalendar'
 import Teams from './pages/Teams'
 import Analytics from './pages/Analytics'
 import ComingSoon from './pages/player/ComingSoon'
+import CoachDashboard from './pages/CoachDashboard'
+import CoachComingSoon from './pages/coach/ComingSoon'
 import ProtectedRoute from './components/ProtectedRoute'
 
 
@@ -67,6 +69,9 @@ function App() {
         <Route path="/player/live-matches" element={<ProtectedRoute><ComingSoon title="Live Matches" icon={Activity} description="Live match scoring and streaming will be available in a future update." /></ProtectedRoute>} />
         <Route path="/player/news" element={<ProtectedRoute><ComingSoon title="News" icon={Newspaper} description="Club and provincial cricket news will appear here soon." /></ProtectedRoute>} />
         <Route path="/player/subscription" element={<ProtectedRoute><ComingSoon title="Subscription" icon={Star} description="Membership and subscription management is coming soon." /></ProtectedRoute>} />
+        <Route path="/coach" element={<ProtectedRoute><CoachDashboard /></ProtectedRoute>} />
+        <Route path="/coach/team" element={<ProtectedRoute><CoachComingSoon title="My Team" icon={Activity} description="Team management tools will be available in a future update." /></ProtectedRoute>} />
+        <Route path="/coach/calendar" element={<ProtectedRoute><CoachComingSoon title="Calendar" icon={Star} description="The coach calendar is coming soon." /></ProtectedRoute>} />
         <Route path="/age-category/:slug" element={<AgeCategoryDetail />} />
       </Routes>
     </BrowserRouter>

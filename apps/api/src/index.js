@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 
 import authRoutes            from './routes/auth.js'
 import playerRoutes          from './routes/players.js'
+import coachRoutes           from './routes/coaches.js'
 import teamRoutes            from './routes/teams.js'
 import matchRoutes           from './routes/matches.js'
 import practiceSessionRoutes from './routes/practiceSessions.js'
@@ -18,6 +19,7 @@ app.use(express.json())
 // Routes
 app.use('/api/auth',             authRoutes)
 app.use('/api/players',          playerRoutes)
+app.use('/api/coaches',          coachRoutes)
 app.use('/api/teams',            teamRoutes)
 app.use('/api/matches',          matchRoutes)
 app.use('/api/practice-sessions',practiceSessionRoutes)

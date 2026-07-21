@@ -16,14 +16,14 @@ function signToken(user) {
 // POST /api/auth/register  (admin only — admins create accounts for players/coaches)
 router.post('/register', requireAuth, requireAdmin, async (req, res) => {
   try {
-    const { name, email, password, role, player } = req.body
+    const { name, email, password, role, player, coach } = req.body
     if (!name || !email || !password)
       return res.status(400).json({ error: 'name, email and password are required' })
 
     const exists = await User.findOne({ email })
     if (exists) return res.status(409).json({ error: 'Email already registered' })
 
-    const user  = await User.create({ name, email, password, role: role || 'player', player })
+    const user  = await User.create({ name, email, password, role: role || 'player', player, coach })
     const token = signToken(user)
     res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } })
   } catch (err) {
@@ -66,9 +66,9 @@ router.post('/create-admin', async (req, res) => {
 
 // GET /api/auth/me  (protected)
 router.get('/me', requireAuth, async (req, res) => {
-  const user = await User.findById(req.user.id).populate('player')
+  const user = await User.findById(req.user.id).populate('player').populate('coach')
   if (!user) return res.status(404).json({ error: 'User not found' })
-  res.json({ id: user._id, name: user.name, email: user.email, role: user.role, player: user.player })
+  res.json({ id: user._id, name: user.name, email: user.email, role: user.role, player: user.player, coach: user.coach })
 })
 
 export default router

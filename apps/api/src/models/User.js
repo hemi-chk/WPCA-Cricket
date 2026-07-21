@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role:     { type: String, enum: ['admin', 'coach', 'player'], default: 'player' },
     player:   { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
+    coach:    { type: mongoose.Schema.Types.ObjectId, ref: 'Coach' },
   },
   { timestamps: true }
 )
